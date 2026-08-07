@@ -1,5 +1,9 @@
 #include "print.h"
 
+char *video =(char*)0xb4000;
+
+int write_pos=0;
+
 void print(char *value){
 
     for (int i = 0; value[i] != 0; i++)
