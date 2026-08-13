@@ -2,8 +2,14 @@ all: iso/
 
 ARCH := $(shell arch)
 
+GRUB := grub-mkrescure
 CC := gcc
 LD := ld
+
+mac: CC := i686-elf-gcc
+mac: LD := i686-elf-ld
+mac: GRUB := x86_64-elf-grub-mkrescue
+
 
 C_SOURCE := $(wildcard kernel-files/*.c)
 
@@ -16,6 +22,7 @@ ifeq (,$(filter, aarch64, arm64,$(ARCH)))
 	LD := i686-linux-gnu-ld
 endif
 
+mac: iso/
 comp_lib: 
 	@for file in kernel-files/*.c; do \
 		$(CC) $(CFLAGS) -c "$$file" -o "$${file%.c}.o"; \
@@ -35,7 +42,11 @@ iso/: kernel.bin
 	mkdir -p iso/boot/grub
 	cp kernel.bin iso/boot/
 	cp grub.cfg iso/boot/grub/
-	grub-mkrescue -o kernel.iso iso
+	#grub-mkrescue -o kernel.iso iso
+	$(GRUB)  -o kernel.iso iso
+
+
 clean:
+	rm kernel-files/*.o
 	rm *.o kernel.iso kernel.bin
 	rm -r iso/

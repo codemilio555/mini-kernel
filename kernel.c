@@ -5,7 +5,8 @@ void main(){
 	//My kernel!!!
 	
  
-	print("Hallo Welt!");
+	print("Hallo Welt");
+	print("\nHow are you");
 	while(1){}
 }
 

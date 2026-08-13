@@ -13,7 +13,10 @@ void print(char *value){
             //*2 beacause we have color and char
             write_pos=(write_pos-((SCREEN_WIDTH*2)%80))+(SCREEN_WIDTH*2);
         }
-
+	//go back  to start of line
+	if(value[i]=='\r'){
+		write_pos = write_pos-(SCREEN_WIDTH*2)%80;
+	}
         // printing char
         video[write_pos] = value[i];
         write_pos++;
