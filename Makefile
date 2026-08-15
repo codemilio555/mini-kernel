@@ -1,21 +1,21 @@
 all: iso/
-
 ARCH := $(shell arch)
 
-GRUB := grub-mkrescure
+
 CC := gcc
 LD := ld
 
 mac: CC := i686-elf-gcc
 mac: LD := i686-elf-ld
-mac: GRUB := x86_64-elf-grub-mkrescue
+
+
 
 
 C_SOURCE := $(wildcard kernel-files/*.c)
 
-CFLAGS := -m32 -ffreestanding -fno-pie -fno-pic -fno-stack-protector -fno-asynchronous-unwind-tables
+CFLAGS := -nostdlib -m32 -O0 -ffreestanding -fno-pie -fno-pic -fno-stack-protector -fno-asynchronous-unwind-tables
 
-OBJ := boot.o $(C_SOURCE:.c=.o)
+OBJ := kernel.o boot.o $(C_SOURCE:.c=.o)
 
 ifeq (,$(filter, aarch64, arm64,$(ARCH)))
 	CC := i686-linux-gnu-gcc
@@ -36,16 +36,18 @@ boot.o: boot.asm
 	nasm -f elf32 boot.asm -o boot.o
 
 kernel.bin: kernel.o boot.o comp_lib
-		$(LD) -m elf_i386 -T linker.ld -o kernel.bin kernel.o $(OBJ)
+		$(LD) -nostdlib -m elf_i386 -s -T linker.ld -o kernel.bin $(OBJ)
 
 iso/: kernel.bin
 	mkdir -p iso/boot/grub
+	mkdir -p iso/EFI/BOOT
 	cp kernel.bin iso/boot/
 	cp grub.cfg iso/boot/grub/
-	#grub-mkrescue -o kernel.iso iso
-	$(GRUB)  -o kernel.iso iso
+
+	grub-mkrescue -d /usr/lib/grub/i386-pc -o kernel.iso iso
 
 
+	
 clean:
 	rm kernel-files/*.o
 	rm *.o kernel.iso kernel.bin

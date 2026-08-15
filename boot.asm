@@ -1,9 +1,16 @@
 section .multiboot
-align 4
-dd 0x1BADB002
-dd 0x0
-dd -(0x1BADB002)
+align 8
+multiboot_start:
+	dd 0xe85250d6
+	dd 0x0
+	dd multiboot_end - multiboot_start
+	dd -(0xe85250d6 + 0 + (multiboot_end - multiboot_start))
 
+	dw 0
+	dw 0
+	dd 8
+
+multiboot_end:
 
 bits 32
 
@@ -14,8 +21,9 @@ extern main
 _start:
 	cli
 	mov esp, stack_top
-	mov dword [0xb8000], 0x07210741
 	call main
+
+
 
 hang:
 	cli
