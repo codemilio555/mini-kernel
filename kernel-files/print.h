@@ -6,5 +6,5 @@
 //The screen height, I don't know it,,,
 #define SCREEN_HEIGHT 40
 
-
+void set_cursor(int pos);
 void print(char *value);

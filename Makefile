@@ -5,8 +5,8 @@ ARCH := $(shell arch)
 CC := gcc
 LD := ld
 
-mac: CC := i686-elf-gcc
-mac: LD := i686-elf-ld
+
+
 
 
 
@@ -22,7 +22,10 @@ ifeq (,$(filter, aarch64, arm64,$(ARCH)))
 	LD := i686-linux-gnu-ld
 endif
 
-mac: iso/
+mac: 
+	@echo off
+	echo "You are on mac, please run: "
+	echo "colima start --arch x86_64"
 comp_lib: 
 	@for file in kernel-files/*.c; do \
 		$(CC) $(CFLAGS) -c "$$file" -o "$${file%.c}.o"; \
