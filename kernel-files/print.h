@@ -8,3 +8,5 @@
 
 void set_cursor(int pos);
 void print(char *value);
+void putchar(char char_print);
+void printlen(char *toPrint, unsigned int len);
